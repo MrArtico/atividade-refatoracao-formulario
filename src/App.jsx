@@ -3,58 +3,28 @@ import './App.css'
 import axios from 'axios';
 
 function App() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [job, setJob] = useState('');
-  const [age, setAge] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [phone, setPhone] = useState('');
-  const [github, setGithub] = useState('');
 
-  function handleNameChange(e) {
-    setName(e.target.value);
-  }
+  const [formData, setData] = useState({
+    name: '',
+    email: '',
+    job: '',
+    age: '',
+    city: '',
+    state: '',
+    phone: '',
+    github: ''
+  });
 
-  function handleEmailChange(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleJobChange(e) {
-    setJob(e.target.value);
-  }
-
-  function handleAgeChange(e) {
-    setAge(e.target.value);
-  }
-
-  function handleCityChange(e) {
-    setCity(e.target.value);
-  }
-
-  function handleStateChange(e) {
-    setState(e.target.value);
-  }
-
-  function handlePhoneChange(e) {
-    setPhone(e.target.value);
-  }
-
-  function handleGithubChange(e) {
-    setGithub(e.target.value);
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   }
 
   async function handleSubmit(e) {
-    const formData = {
-      name: name,
-      email: email,
-      job: job,
-      age: age,
-      city: city,
-      state: state,
-      phone: phone,
-      github: github
-    };
+    e.preventDefault();
 
     try {
       const response = await axios.post('https://reqres.in/api/users', formData, {
@@ -63,6 +33,16 @@ function App() {
         }
       });
       alert('Usuário criado! ID: ' + response.data.id);
+      setData({
+        name: '',
+        email: '',
+        job: '',
+        age: '',
+        city: '',
+        state: '',
+        phone: '',
+        github: ''
+      });
     } catch (error) {
       alert('Erro ao enviar os dados.');
       console.error(error);
@@ -72,16 +52,16 @@ function App() {
   return (
     <div>
       <h2>Cadastro de Usuário</h2>
-      <form>
-        <input placeholder="Nome" value={name} onChange={handleNameChange} />
-        <input placeholder="Email" value={email} onChange={handleEmailChange} />
-        <input placeholder="Cargo" value={job} onChange={handleJobChange} />
-        <input placeholder="Idade" value={age} onChange={handleAgeChange} />
-        <input placeholder="Cidade" value={city} onChange={handleCityChange} />
-        <input placeholder="Estado" value={state} onChange={handleStateChange} />
-        <input placeholder="Telefone" value={phone} onChange={handlePhoneChange} />
-        <input placeholder="GitHub" value={github} onChange={handleGithubChange} />
-        <button type="button" onClick={handleSubmit}>Enviar</button>
+      <form onSubmit={handleSubmit}>
+        <input placeholder="Nome" name='name' value={formData.name} onChange={handleChange} required />
+        <input placeholder="Email" name='email' value={formData.email} onChange={handleChange} required />
+        <input placeholder="Cargo" name='job' value={formData.job} onChange={handleChange} required />
+        <input placeholder="Idade" name='age' value={formData.age} onChange={handleChange} required />
+        <input placeholder="Cidade" name='city' value={formData.city} onChange={handleChange} required />
+        <input placeholder="Estado" name='state' value={formData.state} onChange={handleChange} required />
+        <input placeholder="Telefone" name='phone' value={formData.phone} onChange={handleChange} required />
+        <input placeholder="GitHub" name='github' value={formData.github} onChange={handleChange} required />
+        <button type="submit">Enviar</button>
       </form>
     </div>
   );
